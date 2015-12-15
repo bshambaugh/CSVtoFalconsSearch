@@ -1,5 +1,5 @@
 var fs = require('fs');
-// var request = require('request');
+var request = require('request');
 
 var Secondfilename = 'ISP_SVG_Data_Links_Entry_Sheet-Definitions.csv';
 
@@ -83,6 +83,7 @@ function splitString(stringToSplit, separator) {
 
 //diagnostic
 
+/*
 function expandAbbreviations(E) {
  for (var j = 0; j < B.length; j++) {
       for (var i = 0; i < E.length; i++) {
@@ -98,7 +99,51 @@ function expandAbbreviations(E) {
  }
  return C;
 }
+*/
 
+function expandAbbreviations(E) {
+ for (var j = 0; j < B.length; j++) {
+      for (var i = 0; i < E.length; i++) {
+/*
+        var element = B[j];
+        var leftside = "[\\s\\/,\\-\\(]";
+        var rightside = "[\\s\\/,\\-\\)]";
+        var orlp = "\|\\s\\/\(";
+        var rpl = "\)\\/$";
+        var lpl = "\^\(\\/";
+        var lplp = "\)[\\s\\/\\-]\|"
+       var regexpression = new RegExp(lpl+element+lplp+leftside+element+rightside+orlp+element+rpl, "g"); */
+
+       var element = B[j];
+       var leftside = "[\\s\\/,\"\\-\\(]";
+       var rightside = "[\\s\\/,\"\\-\\)]";
+       var orlp = "\|\\s\(";
+       var rpl = "\)\$";
+       var lpl = "\^\(";
+       var lplp = "\)[\\s\\/\\-]\|";
+       var fwdslash = "\|\/";  // This works
+    //   var fwdslashp = "\|\/\("
+       var doublequote = "\|\"";
+    //   var end = "\)\$";
+       var last = "\$";
+  //     var regexpression = new RegExp(lpl+element+lplp+leftside+element+rightside+orlp+element+rpl+fwdslash+element
+  //    +doublequote+element+element+doublequote+fwdslashp+element+end, "g");
+
+      var regexpression = new RegExp(lpl+element+lplp+leftside+element+rightside+orlp+element+rpl+fwdslash+element+last+doublequote+element+last, "g");
+
+           C[i] = E[i].replace(regexpression," "+K[j]+" ");
+        //  C[i] = E[i].replace(B[j],K[j]);
+   }
+      for (var i = 0; i < E.length; i++) {
+        if (E[i] != C[i]) {
+        E[i] = C[i];
+
+        }
+      }
+
+ }
+ return C;
+}
 
 
 //out
@@ -110,6 +155,9 @@ var carriageR = '\r\n';
 
 console.log(expandAbbreviations(splitString(G, comma)));
 var T = expandAbbreviations(splitString(G, comma));
+
+addplusGET(T); // Call this function to perform a GET request on all elements
+              // of the array
 
 function addplusGET(T)
 {
